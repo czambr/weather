@@ -63,6 +63,23 @@ let loadWeekForecastData = () => {
     };
 }
 
+let loadCitysForecastData = () => {
+    let ElementOptions = document.getElementById('dropdownMenuButton');
+    ElementOptions.innerHTML = '<option value="" selected disabled hidden>Seleccione una ciudad</option>';
 
-loadDayForecastData();
-loadWeekForecastData();
+    for (let ind in weather_data){  
+        let city = weather_data[ind].city;
+        let tag = `<option class="dropdown-item" value="${city.trim().toLowerCase()}">${city.trim()}</option>`;
+        ElementOptions.innerHTML += tag;
+    };   
+}
+
+// ==> Carga masiva de datos
+// loadDayForecastData();
+// loadWeekForecastData();
+loadCitysForecastData();
+
+// ==> Callbacks realizados
+document.addEventListener("DOMContentLoaded", loadDayForecastData());
+let element = document.getElementById('loadinfo');
+element.addEventListener('click', loadWeekForecastData);

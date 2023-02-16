@@ -1,8 +1,8 @@
 import { weather_data } from './data.js';
 
 
-let loadDayForecastData = () => {
-    let [ciudad1, ciudad2, ciudad3] = weather_data;
+let loadDayForecastData = (ind) => {
+    let ciudad = weather_data[ind];
 
     let ElementCity = document.getElementById('city');
     let ElementTempMax = document.getElementById('maxtemperature');
@@ -12,40 +12,40 @@ let loadDayForecastData = () => {
     let ElementRainfall = document.getElementById('rainfall');
     let ElementDate = document.getElementById('date');
 
-    ElementCity.innerHTML = ciudad1.city;
-    ElementTempMax.innerHTML = ciudad1.maxtemperature;
-    ElementTempMin.innerHTML = ciudad1.mintemperature;
-    ElementCloudiness.innerHTML = ciudad1.cloudiness;
-    ElementWind.innerHTML = ciudad1.wind;
-    ElementRainfall.innerHTML = ciudad1.rainfall;
-    ElementDate.innerHTML = ciudad1.date;
+    ElementCity.innerHTML = ciudad.city;
+    ElementTempMax.innerHTML = ciudad.maxtemperature;
+    ElementTempMin.innerHTML = ciudad.mintemperature;
+    ElementCloudiness.innerHTML = ciudad.cloudiness;
+    ElementWind.innerHTML = ciudad.wind;
+    ElementRainfall.innerHTML = ciudad.rainfall;
+    ElementDate.innerHTML = ciudad.date;
 
     let ElementTempLate = document.getElementById('late_temperature');
     let ElementIconLate = document.getElementById('late_icon');
     let ElementTempLate_forecast = document.getElementById('late_forecast');
     let ElementTempLate_text = document.getElementById('late_text');
-    ElementTempLate.innerHTML = ciudad1.forecast_today[0].temperature;
-    ElementIconLate.innerHTML = ciudad1.forecast_today[0].icon;
-    ElementTempLate_forecast.innerHTML = ciudad1.forecast_today[0].forecast;
-    ElementTempLate_text.innerHTML = ciudad1.forecast_today[0].text;
+    ElementTempLate.innerHTML = ciudad.forecast_today[0].temperature;
+    ElementIconLate.innerHTML = ciudad.forecast_today[0].icon;
+    ElementTempLate_forecast.innerHTML = ciudad.forecast_today[0].forecast;
+    ElementTempLate_text.innerHTML = ciudad.forecast_today[0].text;
 
     let ElementTempNight = document.getElementById('night_temperature');
     let ElementIconNight = document.getElementById('night_icon');
     let ElementTempNight_forecast = document.getElementById('night_forecast');
     let ElementTempNight_text = document.getElementById('night_text');
-    ElementTempNight.innerHTML = ciudad1.forecast_today[1].temperature;
-    ElementIconNight.innerHTML = ciudad1.forecast_today[1].icon;
-    ElementTempNight_forecast.innerHTML = ciudad1.forecast_today[1].forecast;
-    ElementTempNight_text.innerHTML = ciudad1.forecast_today[1].text;
+    ElementTempNight.innerHTML = ciudad.forecast_today[1].temperature;
+    ElementIconNight.innerHTML = ciudad.forecast_today[1].icon;
+    ElementTempNight_forecast.innerHTML = ciudad.forecast_today[1].forecast;
+    ElementTempNight_text.innerHTML = ciudad.forecast_today[1].text;
 
 }
 
-let loadWeekForecastData = () => {
+let loadWeekForecastData = (ind) => {
+    let ciudad = weather_data[ind]
 
-    let [ciudad1, ciudad2, ciudad3] = weather_data;
-
-    let arrayForecastWeek = ciudad1.forecast_week;
+    let arrayForecastWeek = ciudad.forecast_week;
     let listOfElements = document.getElementsByClassName('list-group');
+    listOfElements[0].innerHTML = ' ';
 
     for (let ind in arrayForecastWeek) {
         let object = arrayForecastWeek[ind];
@@ -74,12 +74,41 @@ let loadCitysForecastData = () => {
     };   
 }
 
-// ==> Carga masiva de datos
+let selectForecastData = (cityParameter) => {
+    let arrayCities = [];
+    for (let ind in weather_data){  
+        arrayCities.push(weather_data[ind].city.trim().toLowerCase());
+    };
+    let indCity = arrayCities.indexOf(cityParameter);
+
+    loadDayForecastData(indCity);
+    let element = document.getElementById('loadinfo');
+    element.addEventListener('click', () => {
+        loadWeekForecastData(indCity)
+    });
+
+}
+
+// ==> PARTE 1: Carga masiva de datos
 // loadDayForecastData();
 // loadWeekForecastData();
-loadCitysForecastData();
+// loadCitysForecastData();
 
-// ==> Callbacks realizados
+// ==> PARTE 2: Callbacks realizados
+/*
 document.addEventListener("DOMContentLoaded", loadDayForecastData());
 let element = document.getElementById('loadinfo');
 element.addEventListener('click', loadWeekForecastData);
+*/
+
+
+// ==> PARTE 3: Carga de datos en función de la ciudad.
+document.addEventListener("DOMContentLoaded", () => {
+    loadCitysForecastData();
+    let element = document.getElementById('dropdownMenuButton');
+    element.addEventListener('click', (city) => {
+        selectForecastData(city.target.value); 
+    });
+});
+
+
